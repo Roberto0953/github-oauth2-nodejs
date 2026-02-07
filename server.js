@@ -1,5 +1,5 @@
-require('dotenv').config(); // Legge il file .env
-const express = require('express'); // Carica il framework per il server
+import 'dotenv/config'; // Legge il file .env
+import express from 'express'; // Carica il framework per il server
 const app = express(); // Crea l'istanza dell'applicazione
 
 app.get("/login", (req, res) => {
@@ -10,7 +10,7 @@ app.get("/login", (req, res) => {
 });
 
 
-app.get("/api/auth/github/callback", (req, res) =>{
+app.get("/api/auth/github/callback", async (req, res) =>{
 
 const  code = req.query.code;
 
@@ -18,14 +18,8 @@ if(!code){
     return res.status(400).send("Bad request");
 }
 
-console.log(code);
-res.send("Autenticazione riuscita!");
+console.log("the code is: ", code);
 
-});
-
-app.listen(8803, () =>{
-    console.log("Server pronto!");
-});
 
 const response = await fetch('https://github.com/login/oauth/access_token', {
     method: 'POST',
@@ -42,4 +36,17 @@ const response = await fetch('https://github.com/login/oauth/access_token', {
 
 
 const data = await response.json();
-console.log(data);
+console.log("Token ricevuto: ", data);
+
+if(data.access_token){
+    res.send("Successo!");
+}else{
+    return res.status(400).send("Error!")
+}
+
+});
+
+app.listen(8803, () =>{
+    console.log("Server pronto!");
+});
+
