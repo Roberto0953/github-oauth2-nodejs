@@ -26,3 +26,20 @@ res.send("Autenticazione riuscita!");
 app.listen(8803, () =>{
     console.log("Server pronto!");
 });
+
+const response = await fetch('https://github.com/login/oauth/access_token', {
+    method: 'POST',
+    body: JSON.stringify({
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code,
+    }),
+    headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+    },
+});
+
+
+const data = await response.json();
+console.log(data);
