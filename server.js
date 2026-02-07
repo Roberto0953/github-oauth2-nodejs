@@ -1,8 +1,12 @@
+require('dotenv').config(); // Legge il file .env
+const express = require('express'); // Carica il framework per il server
+const app = express(); // Crea l'istanza dell'applicazione
+
 app.get("/login", (req, res) => {
-
-const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}`;
-res.redirect(url);
-
+    const clientId = process.env.GITHUB_CLIENT_ID;
+    const url = `https://github.com/login/oauth/authorize?client_id=${clientId}`;
+    
+    res.redirect(url);
 });
 
 
@@ -17,4 +21,8 @@ if(!code){
 console.log(code);
 res.send("Autenticazione riuscita!");
 
+});
+
+app.listen(8803, () =>{
+    console.log("Server pronto!");
 });
