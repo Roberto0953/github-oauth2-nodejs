@@ -38,10 +38,24 @@ const response = await fetch('https://github.com/login/oauth/access_token', {
 const data = await response.json();
 console.log("Token ricevuto: ", data);
 
-if(data.access_token){
-    res.send("Successo!");
-}else{
-    return res.status(400).send("Error!")
+
+const userResponse = await fetch("https://api.github.com/user", {
+    method: 'GET',
+    headers: {
+        "Authorization": `Bearer ${data.access_token}`, 
+        "User-Agent": "IlMioProgettoOAuth",
+        "Accept": "application/json"
+    }
+
+});
+
+const userData =  await userResponse.json();
+console.log("Dati profilo: ", userData);
+
+if (userData.login) {
+    res.send(`<h1>Benvenuto ${userData.login}!</h1><img src="${userData.avatar_url}" width="100">`);
+} else {
+    res.status(500).send("Errore nel recupero dei dati utente");
 }
 
 });
